@@ -13,6 +13,10 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
+    "react-three": "^0.9.7",
+    "react-three-fiber": "^4.2.8",
+    "three": "^0.117.1",
+    "three-volumetric": "0.0.4",
     "typescript": "~3.7.2"
   },
   "scripts": {
