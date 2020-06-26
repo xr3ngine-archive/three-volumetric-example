@@ -1,5 +1,8 @@
 import * as THREE from "three";
-import React, { useEffect, useRef, useState, Suspense } from "react";
+import React, { useEffect, useRef, useState } from "react";
+
+// import { unstable_createResource as createResource } from "../../resources/cache";
+// import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import ReactDOM from "react-dom";
 import {
   Canvas,
@@ -8,6 +11,7 @@ import {
   extend,
   ReactThreeFiber,
 } from "react-three-fiber";
+
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 // @ts-ignore
 import { GLTFPlayer } from "three-volumetric/dist/index";
@@ -23,51 +27,40 @@ declare global {
       >;
     }
   }
+  var loaded: boolean;
+  var model: any;
 }
 
 function LoadPlayer() {
-  const { scene } = useThree();
+  const [onLoaded, setonLoaded] = useState(false);
+  const [onLoading, setonLoading] = useState(false);
 
-  const volcap = new GLTFPlayer(
-    scene,
-    "assets/file.glb",
-    function () {},
-    0.05,
-    { x: 0, y: -5, z: 0 }
-  );
+  const { scene } = useThree();
+  if (!onLoaded && !onLoading) {
+    setonLoading(true);
+    new GLTFPlayer(
+      scene,
+      "assets/optimized_howie_v2.glb",
+      "assets/audio/handsanitizersound_cut.wav",
+      function () {
+        console.log("function called");
+        setonLoaded(true);
+        // global.loaded = true;
+      },
+      4,
+      { x: 0, y: -5, z: -10 },
+      { x: -Math.PI / 2, y: 0, z: -Math.PI / 2 },
+      true,
+      true,
+      true,
+      true,
+      2,
+      191
+    );
+  }
   // useFrame(() => volcap.update());
   const mesh: any = useRef();
-
   return <mesh></mesh>;
-}
-
-function Box(props: any) {
-  // This reference will give us direct access to the mesh
-  const mesh: any = useRef();
-
-  // Set up state for the hovered and active state
-  const [hovered, setHover] = useState(false);
-  const [active, setActive] = useState(false);
-
-  // Rotate mesh every frame, this is outside of React without overhead
-  useFrame(() => (mesh.current.rotation.x = mesh.current.rotation.y += 0.01));
-
-  return (
-    <mesh
-      {...props}
-      ref={mesh}
-      scale={active ? [1.5, 1.5, 1.5] : [1, 1, 1]}
-      onClick={(e) => setActive(!active)}
-      onPointerOver={(e) => setHover(true)}
-      onPointerOut={(e) => setHover(false)}
-    >
-      <boxBufferGeometry attach="geometry" args={[1, 1, 1]} />
-      <meshStandardMaterial
-        attach="material"
-        color={hovered ? "hotpink" : "orange"}
-      />
-    </mesh>
-  );
 }
 
 export function Controls() {
@@ -88,18 +81,16 @@ export function Controls() {
 function App(props: any) {
   useEffect(() => {
     ReactDOM.render(
-      <Canvas camera={{ position: [0, 0, 10] }}>
-        <ambientLight />
-        {/* <pointLight position={[1, 1, 1]} /> */}
-        <Suspense fallback={<Box />}>{<LoadPlayer />}</Suspense>
+      <Canvas camera={{ position: [0, 0, 0], up: [0, 1, 0] }}>
+        <ambientLight intensity={0.2} />
+        <pointLight position={[1, 1, 1]} />
+        <LoadPlayer />
         <Controls />
-        {/* <Box position={[0, 0, 0]} /> */}
       </Canvas>,
       document.getElementById("root")
     );
-
-    // Initialization here
   }, []);
+
   return <div className="App"></div>;
 }
 

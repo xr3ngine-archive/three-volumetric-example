@@ -13,11 +13,15 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
+    "react-spring": "^8.0.27",
     "react-three": "^0.9.7",
     "react-three-fiber": "^4.2.8",
+    "react-use-gesture": "^7.0.15",
+    "react-xr": "^1.0.6",
     "three": "^0.117.1",
     "three-volumetric": "0.0.4",
-    "typescript": "~3.7.2"
+    "typescript": "~3.7.2",
+    "zingtouch": "^1.0.6"
   },
   "scripts": {
     "start": "react-scripts start",

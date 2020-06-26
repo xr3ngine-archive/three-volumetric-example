@@ -1,5 +1,8 @@
 public/assets
 
+build/assets
+build
+
 # Logs
 logs
 *.log
